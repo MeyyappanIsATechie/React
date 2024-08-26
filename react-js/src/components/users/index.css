@@ -1,0 +1,14 @@
+.loader {
+    border: 8px solid #f3f3f3; /* Light gray border */
+    border-top: 8px solid #3498db; /* Blue border for the top */
+    border-radius: 50%; /* Make it a circle */
+    width: 40px; /* Width of the circle */
+    height: 40px; /* Height of the circle */
+    animation: spin 2s linear infinite; /* Spin animation */
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
