@@ -1,10 +1,16 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { handleAddBlog, handleInputChange } from "../store/slices/blog";
+import {
+  handleAddBlog,
+  handleEditBlog,
+  handleInputChange,
+  setCurrentEditedBlogId,
+} from "../store/slices/blog";
 
 const AddNew = () => {
   const { blog } = useSelector((state) => state);
   const dispatch = useDispatch();
+  const { currentEditedBlogId } = blog;
 
   //   console.log(blog);
 
@@ -18,7 +24,21 @@ const AddNew = () => {
   const handleBlogSubmit = (e) => {
     e.preventDefault();
     // console.log("Form submitted", blog.formData);
-    dispatch(handleAddBlog());
+    if (currentEditedBlogId) {
+      dispatch(handleEditBlog(currentEditedBlogId));
+      // dispatch(handleInputChange({title: "", description: ""}));
+      // dispatch(handleAddBlog(null)); // Clear the current edited blog id.  // Clear the form data.
+    } else {
+      dispatch(handleAddBlog());
+    }
+    // Reset the form data.
+    if (currentEditedBlogId)
+      dispatch(
+        setCurrentEditedBlogId({
+          currentEditedBlogId: null,
+        })
+      );
+    dispatch(handleInputChange({ title: "", description: "" }));
   };
   return (
     <div>
@@ -45,7 +65,9 @@ const AddNew = () => {
             value={blog?.formData?.description}
           />
         </div>
-        <button type="submit">Add new Blog</button>
+        <button type="submit">
+          {blog?.currentEditedBlogId ? "Edit Blog" : "Add New Blog"}
+        </button>
       </form>
     </div>
   );

@@ -6,6 +6,7 @@ const initialState = {
     description: "",
   },
   blogList: [],
+  currentEditedBlogId: null,
 };
 
 export const blogSlice = createSlice({
@@ -31,12 +32,42 @@ export const blogSlice = createSlice({
       localStorage.setItem("blogList", JSON.stringify(state.blogList));
     },
     setBlogListOnInitialLoad: (state, action) => {
-      state.blogList = action.payload;
+      state.blogList = action.payload.blogList;
+    },
+    handleDeleteBlog: (state, action) => {
+      // state.blogList = state.blogList.filter((blog) => blog.id!== action.payload.id);
+      // localStorage.setItem("blogList", JSON.stringify(state.blogList));
+      let cpyBlogList = [...state.blogList];
+      cpyBlogList = cpyBlogList.filter(
+        (blog) => blog.id !== action.payload.blogId
+      );
+      state.blogList = cpyBlogList;
+      localStorage.setItem("blogList", JSON.stringify(state.blogList));
+    },
+    setCurrentEditedBlogId: (state, action) => {
+      state.currentEditedBlogId = action.payload.currentEditedBlogId;
+    },
+    handleEditBlog: (state, action) => {
+      let cpyBlogList = [...state.blogList];
+      cpyBlogList = cpyBlogList.map((blog) =>
+        blog.id === state.currentEditedBlogId
+          ? { ...blog, ...state.formData }
+          : blog
+      );
+      state.blogList = cpyBlogList;
+      localStorage.setItem("blogList", JSON.stringify(state.blogList));
+      //state.currentEditedBlogId = null; // Reset currentEditedBlogId after editing a blog
     },
   },
 });
 
-export const { handleInputChange, handleAddBlog, setBlogListOnInitialLoad } =
-  blogSlice.actions;
+export const {
+  handleInputChange,
+  handleAddBlog,
+  setBlogListOnInitialLoad,
+  handleDeleteBlog,
+  setCurrentEditedBlogId,
+  handleEditBlog,
+} = blogSlice.actions;
 
 export default blogSlice.reducer;
